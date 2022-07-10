@@ -1,0 +1,104 @@
+body {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background: linear-gradient(45deg, #c2ffe0, #99ff99);
+}
+
+p {
+	font-size: 20px;
+	font-weight: 3000;
+}
+
+textarea {
+	width: 200px;
+	height: 50px;
+	padding:20px;
+	          
+	font-size: 20px;
+	font-weight: 3000;
+		  
+	background-color: #FFFFFF;
+	color: #222222;
+	border: 1px solid #222222;
+	border-radius: 8px;
+}
+
+
+.button {
+	width: 200px;
+	height: 70px;
+		  
+	font-size: 20px;
+	font-weight: 5000;
+		  
+	background-color: #FFFFFF;
+	border: 1px solid #222222;
+	border-radius: 8px;
+	box-sizing: border-box;
+	color: #222222;
+	cursor: pointer;
+	display: inline-block;
+	margin: 0;
+	outline: none;
+	padding: 13px 23px;
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	touch-action: manipulation;
+	transition: box-shadow .2s,-ms-transform .1s,-webkit-transform .1s,transform .1s;
+	user-select: none;
+	-webkit-user-select: none;
+}
+.button:focus-visible {
+	box-shadow: #222222 0 0 0 2px, rgba(255, 255, 255, 0.8) 0 0 0 4px;
+	transition: box-shadow .2s;
+}	
+.button:active {
+	background-color: #F7F7F7;
+	border-color: #000000;
+	transform: scale(.96);
+}	
+.button:disabled {
+	border-color: #DDDDDD;
+	color: #DDDDDD;
+	cursor: not-allowed;
+	opacity: 1;
+}
+
+.div1 {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	width: 250px;
+	margin:5px;
+	padding:5px;
+	background-color: #FFFFFF;
+	border: 1px solid #222222;
+	border-radius: 8px;
+	text-align:center;
+	float:right;
+	font-size: 20px;
+	font-weight: 2700;
+}
+	.div3 {
+	height:400px;
+	overflow-y: scroll;
+}
+
+
+#lonelyTextarea {
+	height: 150px;
+}
+
+#lonelyButton {
+	background-color: #c2ffe0;
+}
+
+#lonelyButton2 {
+	width: 500px;
+}

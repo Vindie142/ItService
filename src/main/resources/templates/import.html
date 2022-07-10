@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+	<head>
+	    <meta charset="ISO-8859-1">
+	    <title>IT Service test task</title>
+	    <link rel="stylesheet" href="/style.css" type="text/css"/>
+	</head>
+	<body>
+		
+		<a class="button" style="position: absolute; top: 20px; left: 20px;
+								font-size: 20px; font-weight: 2300;" 
+								href="/">Home</a>
+		<p th:text=${info}/>
+		<form method="POST" enctype="multipart/form-data">
+		  <p>File to import: </p>
+		  <input class="button" id="lonelyButton2" type="file" name="file"><br/><br/>
+		  <input class="button" type="submit" value="Import">
+		</form>
+		
+	</body>
+</html>

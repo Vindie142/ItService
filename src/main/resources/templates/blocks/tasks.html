@@ -1,0 +1,70 @@
+<div th:fragment="taskTwoArrays">
+	<form align="center" method="POST" action="/">
+		<table>
+			 <tr>
+				<td colspan="3"><p th:text=${info}/></td>
+			 </tr>
+			 <tr>
+			<tr>
+				<td><p>Array 1 =</p></td>
+			 	<td><textarea name="input1" th:text=${input1} required="required" placeholder="arp, live, strong..."></textarea></td>
+			 	<td rowspan="2"><textarea id="lonelyTextarea" th:text="${output}" readonly/></td>
+			 </tr>
+			 <tr>
+			 	<td><p>Array 2 =</p></td>
+			 	<td><textarea name="input2" th:text=${input2} required="required" placeholder="lively, alive, harp..."></textarea></td>
+			 </tr>
+			 <tr>
+			 	<td></td>
+			 	<td>
+			 		<select onchange="javascript:this.form.submit()" class="button" id="lonelyButton" name="inputTask" required="required">
+						<option selected="selected" value="taskTwoArrays">Task "Two arrays"</option>
+						<option value="taskMagicSquare">Task "Magic square"</option>
+					</select>
+				</td>
+				<td><input class="button" name="inputButton" type="submit" value="Calc"></td>
+			 </tr>
+			 <tr>
+			 	<td></td>
+			 	<td><input class="button" name="inputButton" type="submit" value="Export"></td>
+			 	<td><a class="button"  href="/import" >Import</a></td>
+			 </tr>
+			 <tr>
+			 	<td></td>
+			 	<td><input class="button" name="inputButton" type="submit" value="Save"></td>
+				<td><a class="button"  href="/upload/taskTwoArrays" >Upload</a></td>
+			 </tr>
+		</table>
+	</form>
+</div>
+
+<div th:fragment="taskMagicSquare">
+	<form align="center" method="POST" action="/">
+		<table>
+			 <tr>
+				<td colspan="3"><p th:text=${info}/></td>
+			 </tr>
+			 <tr>
+			 	<td><textarea name="input1" th:text="${input1}" required="required" placeholder="1, 2, 3, 4..."></textarea></td>
+			 	<td><textarea th:text="${output}" readonly/></td>
+			 </tr>
+			 <tr>
+			 	<td>
+			 		<select onchange="javascript:this.form.submit()" class="button" id="lonelyButton" name="inputTask" required="required">
+						<option value="taskTwoArrays">Task "Two arrays"</option>
+						<option selected="selected" value="taskMagicSquare">Task "Magic square"</option>
+					</select>
+				</td>
+				<td><input class="button" name="inputButton" type="submit" value="Calc"></td>
+			 </tr>
+			 <tr>
+			 	<td><input class="button" name="inputButton" type="submit" value="Export"></td>
+			 	<td><a class="button"  href="/import" >Import</a></td>
+			 </tr>
+			 <tr>
+			 	<td><input class="button" name="inputButton" type="submit" value="Save"></td>
+				<td><a class="button"  href="/upload/taskMagicSquare" >Upload</a></td>
+			 </tr>
+		</table>
+	</form>
+</div>

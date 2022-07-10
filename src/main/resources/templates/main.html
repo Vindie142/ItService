@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+	<head>
+	    <meta charset="ISO-8859-1">
+	    <title>IT Service test task</title>
+	    <link rel="stylesheet" href="/style.css" type="text/css"/>
+	</head>
+	<body>
+
+<body>
+	
+	<div th:if="${task == 'taskTwoArrays'}" th:insert="blocks/tasks :: taskTwoArrays"></div>
+	<div th:if="${task == 'taskMagicSquare'}" th:insert="blocks/tasks :: taskMagicSquare"></div>
+	
+</body>
+
+</html>

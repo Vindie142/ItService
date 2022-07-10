@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+	<head>
+	    <meta charset="ISO-8859-1">
+	    <title>IT Service test task</title>
+	    <link rel="stylesheet" href="/style.css" type="text/css"/>
+	</head>
+	<body>
+	
+	<a class="button" style="position: absolute; top: 20px; left: 20px;
+								font-size: 20px; font-weight: 2300;" 
+								href="/">Home</a>
+								
+		<div align="center">
+			<p th:text="${title}+' uploads:'">Uploads:</p>
+			<div th:each="upload : ${uploads}">
+				<form align="center" method="POST" action="/">
+					<textarea name="input1" th:text="${upload.input1}" readonly/>
+					<textarea name="input2" th:text="${upload.input2}" th:if="${task == 'taskTwoArrays'}" readonly/>
+						
+					<select class="button" id="lonelyButton" name="inputTask" required="required" style="display:none;">
+						<option th:selected="${task == 'taskTwoArrays'}" value="taskTwoArrays">Task "Two arrays"</option>
+						<option th:selected="${task == 'taskMagicSquare'}" value="taskMagicSquare">Task "Magic square"</option>
+					</select>
+						
+						<input class="button" name="inputButton" type="submit" value="Calc">
+				</form>
+			</div>
+		</div>
+		
+	</body>
+</html>
