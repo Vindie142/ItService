@@ -9,11 +9,10 @@
 	
 		<form align="center" method="POST" action="/">
 			<textarea name="input1" th:text="${input1}" readonly/>
-			<textarea name="input2" th:text="${input2}" th:if="${task == 'taskTwoArrays'}" readonly/>
+			<textarea name="input2" th:text="${input2}" th:if="${input2 != null}" readonly/>
 						
 			<select class="button" id="lonelyButton" name="inputTask" required="required" style="display:none;">
-				<option th:selected="${task == 'taskTwoArrays'}" value="taskTwoArrays">Task "Two arrays"</option>
-				<option th:selected="${task == 'taskMagicSquare'}" value="taskMagicSquare">Task "Magic square"</option>
+				<option th:each="i : ${allTasks}" th:selected="${task == i.getKey()}" th:value="${i.getKey()}"></option>
 			</select>
 				
 				<input class="button" name="inputButton" type="submit" value="Calc">

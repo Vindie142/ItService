@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -25,9 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ru.kazberov.ItService.ListOfTasks;
 import ru.kazberov.ItService.models.Task;
-import ru.kazberov.ItService.models.TaskMagicSquare;
-import ru.kazberov.ItService.models.TaskTwoArrays;
 import ru.kazberov.ItService.repo.AUpload;
 import ru.kazberov.ItService.repo.AUploadRepository;
 
@@ -39,7 +37,8 @@ public class Controllers {
 	
 	@GetMapping("/")
     public String mainPage(Model model){
-		model.addAttribute("task", "taskTwoArrays");
+		model.addAttribute("allTasks", ListOfTasks.getTasks());
+		model.addAttribute("task", ListOfTasks.getFirstProgramName());
 		return "main";		
     }
 	
@@ -57,19 +56,12 @@ public class Controllers {
 		
 		// if the request is to execute, and not just to change the task
 		if (inputButton != null) {
-			
-			// check the entered task
-			Task task;
-			if (inputTask.equals("taskMagicSquare")) {
-				task = new TaskMagicSquare();
-			} else {
-				task = new TaskTwoArrays();
-				model.addAttribute("output2", input2);
-			}
 			model.addAttribute("output1", input1);
+			model.addAttribute("output2", input2);
 			
 			switch (inputButton) {
 				case "Calc":
+					Task task = ListOfTasks.getTask(inputTask);
 					task.write(input1, input2);
 					task.calculate();
 					model.addAttribute("output", task.getAnswer());
@@ -92,26 +84,16 @@ public class Controllers {
 			model.addAttribute("input2", "");
 		}
 		
+		model.addAttribute("allTasks", ListOfTasks.getTasks());
 		model.addAttribute("task", inputTask);
 		return "main";	
 	}
 	
 	@GetMapping("/upload/{task}")
     public String uploadingPage(@PathVariable(value = "task") String task, Model model){
-		List<AUpload> uploads;
-		switch (task) {
-			case "taskMagicSquare":
-				uploads = aUploadRepository.getUploadsWithTask("taskMagicSquare");
-				model.addAttribute("title", "Task magic square");
-				break;
-			case "taskTwoArrays":
-				uploads = aUploadRepository.getUploadsWithTask("taskTwoArrays");
-				model.addAttribute("title", "Task two arrays");
-				break;
-			default:
-				return "redirect:/";
-		}
-		model.addAttribute("uploads",uploads);
+		model.addAttribute("title", "Task "+ListOfTasks.getShowNameFrom(task));
+		model.addAttribute("uploads", aUploadRepository.getUploadsWithTask(task));
+		model.addAttribute("allTasks", ListOfTasks.getTasks());
 		model.addAttribute("task", task);
 		return "upload";
     }
@@ -140,6 +122,7 @@ public class Controllers {
 			model.addAttribute("info", "Invalid file!!");
 			return "import";
 		} else {
+			model.addAttribute("allTasks", ListOfTasks.getTasks());
 			model.addAttribute("task", aUpload.getTask());
 			model.addAttribute("input1", aUpload.getInput1());
 			model.addAttribute("input2", aUpload.getInput2());

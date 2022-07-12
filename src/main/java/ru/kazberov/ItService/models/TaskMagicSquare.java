@@ -74,9 +74,7 @@ public class TaskMagicSquare implements Task {
 						// if the array is magic, then it is written to an array with magic arrays
 						if (found && checkingForMagic(testArray)) {
 							int[] magicArray = new int[squareOfDegree];
-							for (int i = 0; i < squareOfDegree; i++) {
-								magicArray[i] = testArray[i];
-							}
+							System.arraycopy(testArray, 0, magicArray, 0, squareOfDegree);
 							withMagicArrays.add(magicArray);							
 						}
 						

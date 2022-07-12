@@ -8,14 +8,14 @@ import org.springframework.data.repository.CrudRepository;
 public interface AUploadRepository extends CrudRepository<AUpload, Long> {
 	
 	public default List<AUpload> getUploadsWithTask(String task){
-		Iterable<AUpload> uploads = findAll();
-		List<AUpload> rightUploads = new ArrayList<AUpload>();
+		Iterable<AUpload> source = findAll();
 		
-		for (AUpload aUpload : uploads) {
-			if (aUpload.getTask().equals(task)) {
-				rightUploads.add(aUpload);
-			}
-		}
+		List<AUpload> uploads = new ArrayList<>();
+		source.forEach(a -> uploads.add(a));
+		
+		List<AUpload> rightUploads = new ArrayList<AUpload>();
+		uploads.stream().filter(a -> a.getTask().equals(task)).forEach(a -> rightUploads.add(a));
+
 		return rightUploads;
 	}
 	

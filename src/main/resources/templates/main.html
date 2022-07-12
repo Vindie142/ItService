@@ -9,8 +9,36 @@
 
 <body>
 	
-	<div th:if="${task == 'taskTwoArrays'}" th:insert="blocks/tasks :: taskTwoArrays"></div>
-	<div th:if="${task == 'taskMagicSquare'}" th:insert="blocks/tasks :: taskMagicSquare"></div>
+	<form align="center" method="POST" action="/">
+		<table>
+			 <tr>
+				<td colspan="3"><p th:text=${info}/></td>
+			 </tr>
+			
+			<div th:insert="blocks/tasks :: ${task}"></div>
+			
+			 <tr>
+			 	<td></td>
+			 	<td>
+			 		<select onchange="javascript:this.form.submit()" class="button" id="lonelyButton" name="inputTask" required="required">
+						<option th:each="i : ${allTasks}" th:selected="${task == i.getKey()}" th:value="${i.getKey()}" th:text="${'Tasktt '+i.getValue()}"></option>
+						
+					</select>
+				</td>
+				<td><input class="button" name="inputButton" type="submit" value="Calc"></td>
+			 </tr>
+			 <tr>
+			 	<td></td>
+			 	<td><input class="button" name="inputButton" type="submit" value="Export"></td>
+			 	<td><a class="button"  href="/import" >Import</a></td>
+			 </tr>
+			 <tr>
+			 	<td></td>
+			 	<td><input class="button" name="inputButton" type="submit" value="Save"></td>
+				<td><a class="button"  th:href="'/upload/' +${task}" >Upload</a></td>
+			 </tr>
+		</table>
+	</form>
 	
 </body>
 
