@@ -108,13 +108,21 @@ public class Controllers {
     							Model model){
 		// getting our file
 		AUpload aUpload = null;
+		InputStream inputStream = null;
+		ObjectInputStream objectInputStream = null;
 		try {
-			InputStream inputStream = file.getInputStream();
-			ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+			inputStream = file.getInputStream();
+			objectInputStream = new ObjectInputStream(inputStream);
 		    aUpload = (AUpload) objectInputStream.readObject();
-		    objectInputStream.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				objectInputStream.close();
+				inputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		// checking if the file was received successfully
