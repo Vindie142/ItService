@@ -109,16 +109,15 @@ public class Controllers {
 		// getting our file
 		AUpload aUpload = null;
 		InputStream inputStream = null;
-		ObjectInputStream objectInputStream = null;
 		try {
 			inputStream = file.getInputStream();
-			objectInputStream = new ObjectInputStream(inputStream);
+			ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
 		    aUpload = (AUpload) objectInputStream.readObject();
+		    objectInputStream.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				objectInputStream.close();
 				inputStream.close();
 			} catch (IOException e) {
 				e.printStackTrace();
