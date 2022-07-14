@@ -21,7 +21,7 @@
 			 	<td></td>
 			 	<td>
 			 		<select onchange="javascript:this.form.submit()" class="button" id="lonelyButton" name="inputTask" required="required">
-						<option th:each="i : ${allTasks}" th:selected="${task == i.getKey()}" th:value="${i.getKey()}" th:text="${'Tasktt '+i.getValue()}"></option>
+						<option th:each="i : ${allTasks}" th:selected="${task == i.getKey()}" th:value="${i.getKey()}" th:text="${'Task '+i.getValue()}"></option>
 						
 					</select>
 				</td>

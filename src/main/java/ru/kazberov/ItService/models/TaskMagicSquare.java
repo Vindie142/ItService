@@ -1,21 +1,24 @@
 package ru.kazberov.ItService.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskMagicSquare implements Task {
 	
-	private static final int degree = 3; // the degree of the array row is 3x3
-	private static final int squareOfDegree = degree*degree; // the square of degree of the array row is 3x3
-	private static final int lineSum = 15; // the sum of the array row is 3x3
+	private static final int DEGREE = 3; // the degree of the array row is 3x3
+	private static final int LINE_SUM = 15; // the sum of the array row is 3x3
+	private static final int SQUARE_OF_DEGREE = DEGREE*DEGREE; // the square of degree of the array row is 3x3
 	private int[] array; // the entered array array
 	private int[] finalArray; // array for the response
 	private String error; // string with errors
 	private int cost; // the cost of converting an array
 	
 	public TaskMagicSquare () {
-		this.array = new int[squareOfDegree];
-		this.finalArray = new int[squareOfDegree];
+		this.array = new int[SQUARE_OF_DEGREE];
+		this.finalArray = new int[SQUARE_OF_DEGREE];
 		this.error = "";
 		this.cost = 0;
 	}
@@ -27,7 +30,7 @@ public class TaskMagicSquare implements Task {
 			return this.error;
 		} else { // if everything is calculated correctly
 			String output = "";
-			for (int i = 0; i < squareOfDegree; i++) {
+			for (int i = 0; i < SQUARE_OF_DEGREE; i++) {
 				output += this.finalArray[i]+", ";
 				if (i == 2 || i == 5) {
 					output += "\n";
@@ -41,7 +44,7 @@ public class TaskMagicSquare implements Task {
 	@Override
 	public void calculate() {
 		List<int[]> withMagicArrays = new ArrayList<int[]>();
-		int[] testArray = new int[squareOfDegree];
+		int[] testArray = new int[SQUARE_OF_DEGREE];
 		List<Integer> remainingDigits = newRemainingDigits();
 		
 		// search for semi-magical arrays (first, the upper left corner of 2x2 is filled in)
@@ -73,8 +76,8 @@ public class TaskMagicSquare implements Task {
 						
 						// if the array is magic, then it is written to an array with magic arrays
 						if (found && checkingForMagic(testArray)) {
-							int[] magicArray = new int[squareOfDegree];
-							System.arraycopy(testArray, 0, magicArray, 0, squareOfDegree);
+							int[] magicArray = new int[SQUARE_OF_DEGREE];
+							System.arraycopy(testArray, 0, magicArray, 0, SQUARE_OF_DEGREE);
 							withMagicArrays.add(magicArray);							
 						}
 						
@@ -89,9 +92,7 @@ public class TaskMagicSquare implements Task {
 		
 		// writes the best array in response
 		int[] finalArray = chooseOneMagicArray(withMagicArrays);
-		for (int i = 0; i < squareOfDegree; i++) {
-			this.finalArray[i] = finalArray[i];
-		}
+		System.arraycopy(finalArray, 0, this.finalArray, 0, SQUARE_OF_DEGREE);
 	}
 	
 	// fills in the remaining cells in the row
@@ -99,7 +100,7 @@ public class TaskMagicSquare implements Task {
 		if (found) {
 			for (int i = 0; i < remainingDigits.size(); i++) {
 				testArray[main] = remainingDigits.get(i);
-				if (testArray[a1]+testArray[a2]+testArray[main] == lineSum) {
+				if (testArray[a1]+testArray[a2]+testArray[main] == LINE_SUM) {
 					return true;
 				} else {
 					testArray[main] = -1;
@@ -113,7 +114,7 @@ public class TaskMagicSquare implements Task {
 	// creates an array of natural numbers up to the desired
 	public List<Integer> newRemainingDigits(){
 		List<Integer> remainingDigits = new ArrayList<Integer>();
-			for (int i = 0; i < squareOfDegree; i++) {
+			for (int i = 0; i < SQUARE_OF_DEGREE; i++) {
 				remainingDigits.add(i+1);
 			}
 		return remainingDigits;
@@ -125,20 +126,16 @@ public class TaskMagicSquare implements Task {
 		int[] cost = new int[withMagicArrays.size()];
 		// calculates the cost of each array
 		for (int i = 0; i < withMagicArrays.size(); i++) {
-			for (int j = 0; j < squareOfDegree; j++) {
+			for (int j = 0; j < SQUARE_OF_DEGREE; j++) {
 				cost[i] += Math.abs(this.array[j] - withMagicArrays.get(i)[j]);
 			}
 		}
 		
 		// finds an array with the minimum cost
-		int minCost = cost[0];
-		int idMinCost = 0;
-	    for(int i = 1; i < cost.length; i++){ 
-	    	if(cost[i] < minCost){ 
-	        minCost = cost[i]; 
-	        idMinCost = i;
-	    	} 
-	    }
+		List<Integer> listOfCost = Arrays.stream(cost).boxed().collect(Collectors.toList());
+		int minCost = Collections.min(listOfCost);
+		int idMinCost = listOfCost.indexOf(minCost);
+		
 	    this.cost = minCost;
 	    return withMagicArrays.get(idMinCost);
 	}
@@ -147,8 +144,8 @@ public class TaskMagicSquare implements Task {
 	public boolean checkingForMagic (int[] testArray) {
 		boolean duplicate = false;
 		// checks the array for repeatability of elements
-		for(int i = 0; i< squareOfDegree; i++) {
-	         for (int j = i+1; j < squareOfDegree; j++) {
+		for(int i = 0; i< SQUARE_OF_DEGREE; i++) {
+	         for (int j = i+1; j < SQUARE_OF_DEGREE; j++) {
 	            if(testArray[i] == testArray[j]) {
 	            	duplicate = true;
 	            }
@@ -156,7 +153,7 @@ public class TaskMagicSquare implements Task {
 	      }
 		
 		// checks the array for magic according to the remaining conditions
-		if (testArray[6]+testArray[7]+testArray[8]  == lineSum && !duplicate) {
+		if (testArray[6]+testArray[7]+testArray[8]  == LINE_SUM && !duplicate) {
 			return true;
 		}
 		return false;
@@ -192,7 +189,7 @@ public class TaskMagicSquare implements Task {
 			return;
 		}
 		
-		for (int i = 0; i < squareOfDegree; i++) {
+		for (int i = 0; i < SQUARE_OF_DEGREE; i++) {
 			this.array[i] = Integer.parseInt(arrayList.get(i));
 		}
 	}
@@ -206,8 +203,8 @@ public class TaskMagicSquare implements Task {
 				 this.error = "Incorrect values!";
 			 } 
 		}
-		if (array.size() != squareOfDegree) {
-			this.error = "The values should be "+squareOfDegree+"!";
+		if (array.size() != SQUARE_OF_DEGREE) {
+			this.error = "The values should be "+SQUARE_OF_DEGREE+"!";
 		}
 	}
 	

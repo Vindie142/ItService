@@ -15,7 +15,6 @@ public interface AUploadRepository extends CrudRepository<AUpload, Long> {
 		
 		List<AUpload> rightUploads = new ArrayList<AUpload>();
 		uploads.stream().filter(a -> a.getTask().equals(task)).forEach(a -> rightUploads.add(a));
-
 		return rightUploads;
 	}
 	

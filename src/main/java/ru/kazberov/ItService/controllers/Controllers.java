@@ -91,11 +91,15 @@ public class Controllers {
 	
 	@GetMapping("/upload/{task}")
     public String uploadingPage(@PathVariable(value = "task") String task, Model model){
-		model.addAttribute("title", "Task "+ListOfTasks.getShowNameFrom(task));
-		model.addAttribute("uploads", aUploadRepository.getUploadsWithTask(task));
-		model.addAttribute("allTasks", ListOfTasks.getTasks());
-		model.addAttribute("task", task);
-		return "upload";
+		// if the task is known
+		if (ListOfTasks.getTasks().containsKey(task)) {
+			model.addAttribute("title", "Task "+ListOfTasks.getShowNameFrom(task));
+			model.addAttribute("uploads", aUploadRepository.getUploadsWithTask(task));
+			model.addAttribute("allTasks", ListOfTasks.getTasks());
+			model.addAttribute("task", task);
+			return "upload";
+		}
+		return "error";
     }
 	
 	@GetMapping("/import")

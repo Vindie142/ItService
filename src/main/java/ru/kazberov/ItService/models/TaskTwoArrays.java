@@ -2,9 +2,8 @@ package ru.kazberov.ItService.models;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TaskTwoArrays implements Task {
 	
@@ -21,43 +20,25 @@ public class TaskTwoArrays implements Task {
 	// returns a response
 	@Override
 	public String getAnswer() {
-		String output = "";
-		for (String string : this.finalArray) {
-			output += string+", ";
-		}
-		return output;
+		return this.finalArray.stream().collect(Collectors.joining(", "));
 	}
 	
 	// performs the calculation
 	@Override
 	public void calculate() {
 		List<String> finalArray = new ArrayList<String>();
-		for (String stringFrom2 : array2) {
-			for (String stringFrom1 : array1) {
+		for (String stringFrom2 : this.array2) {
+			for (String stringFrom1 : this.array1) {
 				// string comparison
 				if (stringFrom2.contains(stringFrom1)) {
 					finalArray.add(stringFrom1);
 				}
 			}
 		}
-		finalArray = removingDuplicates(finalArray);
+		finalArray = finalArray.stream().distinct().collect(Collectors.toList());
 		Collections.sort(finalArray);
 		this.finalArray = finalArray;
-	}
-	
-	public List<String> removingDuplicates(List<String> array) {
-		Set<String> set = new HashSet<String>();
-        for (String string : array) {
-            set.add(string);
-        }
-        List<String> arrayWithoutDuplicates = new ArrayList<String>();
-        for (String string : set) {
-        	arrayWithoutDuplicates.add(string);
-		}
-		return arrayWithoutDuplicates;
-		
-	}
-	
+	}	
 	
 	public void write(String inputArray1, String inputArray2) {
 		// turning a string into an array of correct strings
@@ -69,7 +50,7 @@ public class TaskTwoArrays implements Task {
 		List<String> correctArray = new ArrayList<String>();
 		String currentString = ""; 
 		
-		// we remove the spaces and create a char from the letters
+		// removes the spaces and creates a char from the letters
 		array = array.replaceAll("\\s+","");
 		char[] arrayInChar = array.toCharArray();
 		
