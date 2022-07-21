@@ -65,12 +65,33 @@ public class AUpload implements Serializable {
 
 	@Override
 	public String toString() {
+		String task = this.task == null ? "" : this.task;
+		String input1 = this.input1 == null ? "" : this.input1;
+		String input2 = this.input2 == null ? "" : this.input2;
 		return  "AUpload{"+
-				"task="+this.task+", "+
-				"input1="+this.input1+", "+
-				"input2="+this.input2+"}";
+				"task="+task+", "+
+				"input1="+input1+", "+
+				"input2="+input2+"}";
 	}
 	
+	@Override
+    public boolean equals(Object obj) {
+	    if (obj == this) {
+	        return true;
+	    }
+	    if (obj == null || obj.getClass() != this.getClass()) {
+	        return false;
+	    }
+	    AUpload mayBe = (AUpload) obj;
+	    return mayBe.toString().equals(this.toString());
+    }
 	
+	@Override
+    public int hashCode() {
+	    String a1 = this.task == null ? " " : this.task;
+		String a2 = this.input1 == null ? " " : this.input1;
+		String a3 = this.input2 == null ? " " : this.input2;
+	    return 31 * (a1.hashCode() + a2.hashCode() + a3.hashCode());
+    }
 	
 }

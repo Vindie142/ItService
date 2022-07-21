@@ -1,34 +1,36 @@
 package ru.kazberov.ItService.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TaskTwoArrays implements Task {
+public class TaskTwoArrays extends Task {
 	
 	private List<String> array1; // the first array entered
 	private List<String> array2; // the second array entered
 	private List<String> finalArray; // array for the response
 	
 	public TaskTwoArrays () {
-		this.array1 = new ArrayList<String>();
-		this.array2 = new ArrayList<String>();
-		this.finalArray = new ArrayList<String>();
+		array1 = new ArrayList<String>();
+		array2 = new ArrayList<String>();
+		finalArray = new ArrayList<String>();
 	}
 	
-	// returns a response
 	@Override
-	public String getAnswer() {
-		return this.finalArray.stream().collect(Collectors.joining(", "));
+	public void write(String input1, String input2) {
+		// turning a string into an array of correct strings
+		array1 = convertToCorrectArray(input1);
+		array2 = convertToCorrectArray(input2);
 	}
 	
 	// performs the calculation
 	@Override
 	public void calculate() {
 		List<String> finalArray = new ArrayList<String>();
-		for (String stringFrom2 : this.array2) {
-			for (String stringFrom1 : this.array1) {
+		for (String stringFrom2 : array2) {
+			for (String stringFrom1 : array1) {
 				// string comparison
 				if (stringFrom2.contains(stringFrom1)) {
 					finalArray.add(stringFrom1);
@@ -38,38 +40,24 @@ public class TaskTwoArrays implements Task {
 		finalArray = finalArray.stream().distinct().collect(Collectors.toList());
 		Collections.sort(finalArray);
 		this.finalArray = finalArray;
-	}	
-	
-	public void write(String inputArray1, String inputArray2) {
-		// turning a string into an array of correct strings
-		this.array1 = convertToCorrectArray(inputArray1);
-		this.array2 = convertToCorrectArray(inputArray2);
 	}
 	
-	public List<String> convertToCorrectArray(String array) {
-		List<String> correctArray = new ArrayList<String>();
-		String currentString = ""; 
-		
+	// returns a response
+	@Override
+	public String getAnswer() {
+		return finalArray.stream().collect(Collectors.joining(", "));
+	}
+	
+	private List<String> convertToCorrectArray(String input) {
 		// removes the spaces and creates a char from the letters
-		array = array.replaceAll("\\s+","");
-		char[] arrayInChar = array.toCharArray();
+		input = input.replaceAll("\\s+","");
 		
-		for (int i = 0; i < arrayInChar.length; i++) {
-			if (arrayInChar[i] == ',') {
-				if (!currentString.equals("")) {
-					correctArray.add(currentString);
-					currentString = "";
-				}
-				continue;
-			}
-			currentString += arrayInChar[i];
-			// if this is the last element of the char
-			if (i == arrayInChar.length-1) {
-				correctArray.add(currentString);
-				currentString = "";
-			}
-		}
+		String[] words = input.split(",");
+		
+		List<String> correctArray = new ArrayList<String>();
+		Arrays.asList(words).stream().forEach(e -> correctArray.add(e));
+		
 		return correctArray;
 	}
-	
+
 }

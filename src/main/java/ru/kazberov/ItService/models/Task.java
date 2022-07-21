@@ -1,7 +1,9 @@
 package ru.kazberov.ItService.models;
 
-public interface Task {
-	public void write(String v1, String v2);
-	public void calculate();
-	public String getAnswer();
+import ru.kazberov.ItService.exceptions.IncorrectInputException;
+
+public abstract class Task {
+	public abstract void write(String a1, String a2) throws IncorrectInputException;
+	public abstract void calculate();
+	public abstract String getAnswer();
 }

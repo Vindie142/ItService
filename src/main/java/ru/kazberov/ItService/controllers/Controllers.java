@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ru.kazberov.ItService.ListOfTasks;
+import ru.kazberov.ItService.exceptions.IncorrectInputException;
 import ru.kazberov.ItService.models.Task;
 import ru.kazberov.ItService.repo.AUpload;
 import ru.kazberov.ItService.repo.AUploadRepository;
@@ -62,9 +63,15 @@ public class Controllers {
 			switch (inputButton) {
 				case "Calc":
 					Task task = ListOfTasks.getTask(inputTask);
-					task.write(input1, input2);
-					task.calculate();
-					model.addAttribute("output", task.getAnswer());
+					String answer;
+					try {
+						task.write(input1, input2);
+						task.calculate();
+						answer = task.getAnswer();
+					} catch (IncorrectInputException e) {
+						answer = e.getMessage();
+					}
+					model.addAttribute("output", answer);
 					model.addAttribute("input1", input1);
 					model.addAttribute("input2", input2);
 					break;

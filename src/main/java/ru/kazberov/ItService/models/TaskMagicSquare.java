@@ -6,38 +6,37 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TaskMagicSquare implements Task {
+import ru.kazberov.ItService.exceptions.IncorrectInputException;
+
+public class TaskMagicSquare extends Task {
 	
 	private static final int DEGREE = 3; // the degree of the array row is 3x3
 	private static final int LINE_SUM = 15; // the sum of the array row is 3x3
 	private static final int SQUARE_OF_DEGREE = DEGREE*DEGREE; // the square of degree of the array row is 3x3
-	private int[] array; // the entered array array
+	private int[] inputArray; // the entered array array
 	private int[] finalArray; // array for the response
-	private String error; // string with errors
 	private int cost; // the cost of converting an array
 	
 	public TaskMagicSquare () {
-		this.array = new int[SQUARE_OF_DEGREE];
-		this.finalArray = new int[SQUARE_OF_DEGREE];
-		this.error = "";
-		this.cost = 0;
+		inputArray = new int[SQUARE_OF_DEGREE];
+		finalArray = new int[SQUARE_OF_DEGREE];
+		cost = 0;
 	}
 	
 	@Override
-	public String getAnswer() {
-		// if there is an error message
-		if (!this.error.equals("")) {
-			return this.error;
-		} else { // if everything is calculated correctly
-			String output = "";
-			for (int i = 0; i < SQUARE_OF_DEGREE; i++) {
-				output += this.finalArray[i]+", ";
-				if (i == 2 || i == 5) {
-					output += "\n";
-				}
-			}
-			output += "\nCost ="+this.cost;
-			return output;
+	public void write(String input, String unusedVariable) throws IncorrectInputException {
+		// removes the spaces and create a char from the letters	
+		input = input.replaceAll("\\s+","");
+		
+		String[] words = input.split(",");
+		
+		List<String> correctArray = new ArrayList<String>();
+		Arrays.asList(words).stream().forEach(e -> correctArray.add(e));
+		
+		ifArrayIsCorrect(correctArray);
+		
+		for (int i = 0; i < SQUARE_OF_DEGREE; i++) {
+			inputArray[i] = Integer.parseInt(correctArray.get(i));
 		}
 	}
 	
@@ -95,8 +94,21 @@ public class TaskMagicSquare implements Task {
 		System.arraycopy(finalArray, 0, this.finalArray, 0, SQUARE_OF_DEGREE);
 	}
 	
+	@Override
+	public String getAnswer() {
+		String output = "";
+		for (int i = 0; i < SQUARE_OF_DEGREE; i++) {
+			output += finalArray[i]+", ";
+			if (i == 2 || i == 5) {
+				output += "\n";
+			}
+		}
+		output += "\nCost ="+cost;
+		return output;
+	}
+	
 	// fills in the remaining cells in the row
-	public boolean componentCalculate (boolean found, int[] testArray, List<Integer> remainingDigits, int main, int a1, int a2) {
+	private boolean componentCalculate (boolean found, int[] testArray, List<Integer> remainingDigits, int main, int a1, int a2) {
 		if (found) {
 			for (int i = 0; i < remainingDigits.size(); i++) {
 				testArray[main] = remainingDigits.get(i);
@@ -112,7 +124,7 @@ public class TaskMagicSquare implements Task {
 	}
 	
 	// creates an array of natural numbers up to the desired
-	public List<Integer> newRemainingDigits(){
+	private List<Integer> newRemainingDigits(){
 		List<Integer> remainingDigits = new ArrayList<Integer>();
 			for (int i = 0; i < SQUARE_OF_DEGREE; i++) {
 				remainingDigits.add(i+1);
@@ -121,13 +133,13 @@ public class TaskMagicSquare implements Task {
 	}
 	
 	// selects the magic array and the lowest cost
-	public int[] chooseOneMagicArray (List<int[]> withMagicArrays) {
+	private int[] chooseOneMagicArray (List<int[]> withMagicArrays) {
 		// an array with the values of each array
 		int[] cost = new int[withMagicArrays.size()];
 		// calculates the cost of each array
 		for (int i = 0; i < withMagicArrays.size(); i++) {
 			for (int j = 0; j < SQUARE_OF_DEGREE; j++) {
-				cost[i] += Math.abs(this.array[j] - withMagicArrays.get(i)[j]);
+				cost[i] += Math.abs(inputArray[j] - withMagicArrays.get(i)[j]);
 			}
 		}
 		
@@ -141,7 +153,7 @@ public class TaskMagicSquare implements Task {
 	}
 	
 	// checks the array for magic according to the remaining conditions
-	public boolean checkingForMagic (int[] testArray) {
+	private boolean checkingForMagic (int[] testArray) {
 		boolean duplicate = false;
 		// checks the array for repeatability of elements
 		for(int i = 0; i< SQUARE_OF_DEGREE; i++) {
@@ -159,52 +171,17 @@ public class TaskMagicSquare implements Task {
 		return false;
 	}
 	
-	@Override
-	public void write(String array, String unusedVariable) {
-		List<String> arrayList = new ArrayList<String>();
-		String currentString = ""; 
-		
-		// removes the spaces and create a char from the letters
-		array = array.replaceAll("\\s+","");
-		char[] arrayInChar = array.toCharArray();
-		
-		for (int i = 0; i < arrayInChar.length; i++) {
-			if (arrayInChar[i] == ',') {
-				if (!currentString.equals("")) {
-					arrayList.add(currentString);
-					currentString = "";
-				}
-				continue;
-			}
-			currentString += arrayInChar[i];
-			// if this is the last element of the char
-			if (i == arrayInChar.length-1) {
-				arrayList.add(currentString);
-				currentString = "";
-			}
-		}
-		ifArrayIsCorrect(arrayList);
-		
-		if (!this.error.equals("")) {
-			return;
-		}
-		
-		for (int i = 0; i < SQUARE_OF_DEGREE; i++) {
-			this.array[i] = Integer.parseInt(arrayList.get(i));
-		}
-	}
-	
 	// checks the array for correctness checks the array for the correctness of the data
-	public void ifArrayIsCorrect(List<String> array) {
+	private void ifArrayIsCorrect(List<String> array) throws IncorrectInputException {
 		for (String string : array) {
 			 try { 
 				 Integer.parseInt(string); 
 			 } catch (Exception e) { 
-				 this.error = "Incorrect values!";
+				 throw new IncorrectInputException("Incorrect values!");
 			 } 
 		}
 		if (array.size() != SQUARE_OF_DEGREE) {
-			this.error = "The values should be "+SQUARE_OF_DEGREE+"!";
+			throw new IncorrectInputException("The values should be "+SQUARE_OF_DEGREE+"!");
 		}
 	}
 	
