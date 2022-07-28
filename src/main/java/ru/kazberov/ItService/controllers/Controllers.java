@@ -25,16 +25,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ru.kazberov.ItService.ListOfTasks;
-import ru.kazberov.ItService.exceptions.IncorrectInputException;
 import ru.kazberov.ItService.models.Task;
 import ru.kazberov.ItService.repo.AUpload;
-import ru.kazberov.ItService.repo.AUploadRepository;
+import ru.kazberov.ItService.repo.AUploadRepo;
 
 @Controller
 public class Controllers {
 	
 	@Autowired
-	private AUploadRepository aUploadRepository;
+	private AUploadRepo aUploadRepo;
 	
 	@GetMapping("/")
     public String mainPage(Model model){
@@ -68,7 +67,7 @@ public class Controllers {
 						task.write(input1, input2);
 						task.calculate();
 						answer = task.getAnswer();
-					} catch (IncorrectInputException e) {
+					} catch (IllegalArgumentException e) {
 						answer = e.getMessage();
 					}
 					model.addAttribute("output", answer);
@@ -82,7 +81,7 @@ public class Controllers {
 					return "redirect:/save.ser";
 				case "Save":
 					AUpload aUpload2 = new AUpload (inputTask, input1, input2);
-					aUploadRepository.save(aUpload2);
+					aUploadRepo.save(aUpload2);
 					model.addAttribute("info", "Successful saving!");
 					break;
 			}
@@ -101,7 +100,7 @@ public class Controllers {
 		// if the task is known
 		if (ListOfTasks.getTasks().containsKey(task)) {
 			model.addAttribute("title", "Task "+ListOfTasks.getShowNameFrom(task));
-			model.addAttribute("uploads", aUploadRepository.getUploadsWithTask(task));
+			model.addAttribute("uploads", aUploadRepo.getUploadsWithTask(task));
 			model.addAttribute("allTasks", ListOfTasks.getTasks());
 			model.addAttribute("task", task);
 			return "upload";
@@ -119,21 +118,13 @@ public class Controllers {
     							Model model){
 		// getting our file
 		AUpload aUpload = null;
-		InputStream inputStream = null;
-		try {
-			inputStream = file.getInputStream();
-			ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+		try (InputStream inputStream = file.getInputStream();
+			ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);)
+		{
 		    aUpload = (AUpload) objectInputStream.readObject();
-		    objectInputStream.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		} 
 		
 		// checking if the file was received successfully
 		if (aUpload == null) { 
@@ -142,8 +133,7 @@ public class Controllers {
 		} else {
 			model.addAttribute("allTasks", ListOfTasks.getTasks());
 			model.addAttribute("task", aUpload.getTask());
-			model.addAttribute("input1", aUpload.getInput1());
-			model.addAttribute("input2", aUpload.getInput2());
+			model.addAttribute("input", aUpload.getInput());
 			return "importSend";
 		}
     }

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface AUploadRepository extends CrudRepository<AUpload, Long> {
+public interface AUploadRepo extends CrudRepository<AUpload, Long> {
 	
 	public default List<AUpload> getUploadsWithTask(String task){
 		Iterable<AUpload> source = findAll();

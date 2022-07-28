@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TaskTwoArrays extends Task {
+public final class TaskTwoArrays extends Task {
 	
 	private List<String> array1; // the first array entered
 	private List<String> array2; // the second array entered
@@ -19,7 +19,9 @@ public class TaskTwoArrays extends Task {
 	}
 	
 	@Override
-	public void write(String input1, String input2) {
+	public void write(String ...args) {
+		String input1 = args[0];
+		String input2 = args[1];
 		// turning a string into an array of correct strings
 		array1 = convertToCorrectArray(input1);
 		array2 = convertToCorrectArray(input2);

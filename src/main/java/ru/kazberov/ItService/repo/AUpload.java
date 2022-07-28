@@ -1,7 +1,10 @@
 package ru.kazberov.ItService.repo;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,22 +15,21 @@ import javax.persistence.Table;
 @Table(name="uploads")
 public class AUpload implements Serializable {
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 67348335405068620L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private String task;
-	private String input1;
-	private String input2;
+	@ElementCollection(targetClass=String.class)
+	private List<String> input;
 	
 	public AUpload () {}
 	
-	public AUpload (String task, String input1, String input2) {
+	public AUpload (String task, String... input) {
 		this.task = task;
-		this.input1 = input1;
-		this.input2 = input2;
+		this.input = Arrays.stream(input).filter(s -> s != null).toList();
 	}
 
 	public Long getId() {
@@ -47,31 +49,21 @@ public class AUpload implements Serializable {
 	}
 	
 
-	public String getInput1() {
-		return input1;
+	public List<String> getInput() {
+		return input;
 	}
 
-	public void setInput1(String input1) {
-		this.input1 = input1;
-	}
-
-	public String getInput2() {
-		return input2;
-	}
-
-	public void setInput2(String input2) {
-		this.input2 = input2;
+	public void setInput(List<String> input) {
+		this.input = input;
 	}
 
 	@Override
 	public String toString() {
 		String task = this.task == null ? "" : this.task;
-		String input1 = this.input1 == null ? "" : this.input1;
-		String input2 = this.input2 == null ? "" : this.input2;
+		String input = this.input == null ? "" : this.input.toString();
 		return  "AUpload{"+
 				"task="+task+", "+
-				"input1="+input1+", "+
-				"input2="+input2+"}";
+				"input="+input+"}";
 	}
 	
 	@Override
@@ -88,10 +80,10 @@ public class AUpload implements Serializable {
 	
 	@Override
     public int hashCode() {
-	    String a1 = this.task == null ? " " : this.task;
-		String a2 = this.input1 == null ? " " : this.input1;
-		String a3 = this.input2 == null ? " " : this.input2;
-	    return 31 * (a1.hashCode() + a2.hashCode() + a3.hashCode());
+		int  result = 31;
+	    int a1 = this.task == null ? 1 : this.task.hashCode();
+	    int a2 = this.input == null ? 1 : this.input.hashCode();
+	    return result * (a1 + a2);
     }
 	
 }

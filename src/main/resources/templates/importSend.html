@@ -8,8 +8,8 @@
 	<body>
 	
 		<form align="center" method="POST" action="/">
-			<textarea name="input1" th:text="${input1}" readonly/>
-			<textarea name="input2" th:text="${input2}" th:if="${input2 != null}" readonly/>
+			<textarea name="input1" th:text="${input.get(0)}" readonly/>
+			<textarea name="input2" th:text="${input.get(1)}" th:if="${input.size() > 1}" readonly/>
 						
 			<select class="button" id="lonelyButton" name="inputTask" required="required" style="display:none;">
 				<option th:each="i : ${allTasks}" th:selected="${task == i.getKey()}" th:value="${i.getKey()}"></option>

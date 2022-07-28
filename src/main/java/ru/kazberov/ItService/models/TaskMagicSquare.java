@@ -6,9 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ru.kazberov.ItService.exceptions.IncorrectInputException;
-
-public class TaskMagicSquare extends Task {
+public final class TaskMagicSquare extends Task {
 	
 	private static final int DEGREE = 3; // the degree of the array row is 3x3
 	private static final int LINE_SUM = 15; // the sum of the array row is 3x3
@@ -24,14 +22,15 @@ public class TaskMagicSquare extends Task {
 	}
 	
 	@Override
-	public void write(String input, String unusedVariable) throws IncorrectInputException {
+	public void write(String ...args) throws IllegalArgumentException {
+		String input = args[0];
 		// removes the spaces and create a char from the letters	
 		input = input.replaceAll("\\s+","");
 		
 		String[] words = input.split(",");
 		
 		List<String> correctArray = new ArrayList<String>();
-		Arrays.asList(words).stream().forEach(e -> correctArray.add(e));
+		Arrays.stream(words).forEach(e -> correctArray.add(e));
 		
 		ifArrayIsCorrect(correctArray);
 		
@@ -61,26 +60,27 @@ public class TaskMagicSquare extends Task {
 					remainingDigits.remove(i3);
 					for (int i4 = 0; i4 < remainingDigits.size(); i4++) {
 						testArray[4] = remainingDigits.get(i4);
-						int forAdd4 = remainingDigits.get(i4);
+						
+						List<Integer> delitedRemainingDigits = remainingDigits.stream().collect(Collectors.toList());
 						remainingDigits.remove(i4);
 						
 						// has the figure for the magic square been found
-						boolean found = true;
+						boolean ifFound = true;
 						// the remaining cells are filled in
-						found = componentCalculate(found, testArray, remainingDigits, 2, 0, 1);
-						found = componentCalculate(found, testArray, remainingDigits, 5, 3, 4);
-						found = componentCalculate(found, testArray, remainingDigits, 6, 0, 3);
-						found = componentCalculate(found, testArray, remainingDigits, 7, 1, 4);
-						found = componentCalculate(found, testArray, remainingDigits, 8, 2, 5);
+						ifFound = componentCalculate(ifFound, testArray, remainingDigits, 2, 0, 1);
+						ifFound = componentCalculate(ifFound, testArray, remainingDigits, 5, 3, 4);
+						ifFound = componentCalculate(ifFound, testArray, remainingDigits, 6, 0, 3);
+						ifFound = componentCalculate(ifFound, testArray, remainingDigits, 7, 1, 4);
+						ifFound = componentCalculate(ifFound, testArray, remainingDigits, 8, 2, 5);
 						
 						// if the array is magic, then it is written to an array with magic arrays
-						if (found && checkingForMagic(testArray)) {
+						if (ifFound && checkingForMagic(testArray)) {
 							int[] magicArray = new int[SQUARE_OF_DEGREE];
 							System.arraycopy(testArray, 0, magicArray, 0, SQUARE_OF_DEGREE);
 							withMagicArrays.add(magicArray);							
 						}
 						
-						remainingDigits.add(forAdd4);
+						remainingDigits = delitedRemainingDigits;
 					}
 					remainingDigits.add(forAdd3);
 				}
@@ -96,28 +96,28 @@ public class TaskMagicSquare extends Task {
 	
 	@Override
 	public String getAnswer() {
-		String output = "";
+		StringBuilder output = new StringBuilder();
 		for (int i = 0; i < SQUARE_OF_DEGREE; i++) {
-			output += finalArray[i]+", ";
+			output.append(finalArray[i]);
+			output.append(", ");
 			if (i == 2 || i == 5) {
-				output += "\n";
+				output.append("\n");
 			}
 		}
-		output += "\nCost ="+cost;
-		return output;
+		output.append("\nCost =");
+		output.append(cost);
+		return output.toString();
 	}
 	
 	// fills in the remaining cells in the row
-	private boolean componentCalculate (boolean found, int[] testArray, List<Integer> remainingDigits, int main, int a1, int a2) {
-		if (found) {
-			for (int i = 0; i < remainingDigits.size(); i++) {
-				testArray[main] = remainingDigits.get(i);
-				if (testArray[a1]+testArray[a2]+testArray[main] == LINE_SUM) {
-					return true;
-				} else {
-					testArray[main] = -1;
-				}
-				
+	private boolean componentCalculate (boolean ifFound, int[] testArray, List<Integer> remainingDigits, int main, int a1, int a2) {
+		if (ifFound) {
+			Integer num = LINE_SUM - (testArray[a1]+testArray[a2]);
+			if (remainingDigits.contains(num)) {
+				int index = remainingDigits.indexOf(num);
+				remainingDigits.remove(index);
+				testArray[main] = num;
+				return true;
 			}
 		}
 		return false;
@@ -172,16 +172,16 @@ public class TaskMagicSquare extends Task {
 	}
 	
 	// checks the array for correctness checks the array for the correctness of the data
-	private void ifArrayIsCorrect(List<String> array) throws IncorrectInputException {
+	private void ifArrayIsCorrect(List<String> array) throws IllegalArgumentException {
 		for (String string : array) {
 			 try { 
 				 Integer.parseInt(string); 
 			 } catch (Exception e) { 
-				 throw new IncorrectInputException("Incorrect values!");
+				 throw new IllegalArgumentException("Incorrect values!");
 			 } 
 		}
 		if (array.size() != SQUARE_OF_DEGREE) {
-			throw new IncorrectInputException("The values should be "+SQUARE_OF_DEGREE+"!");
+			throw new IllegalArgumentException("The values should be "+SQUARE_OF_DEGREE+"!");
 		}
 	}
 	
